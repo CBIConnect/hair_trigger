@@ -39,7 +39,14 @@ shared_context "hairtrigger utils" do
     FileUtils.mkdir_p(HairTrigger.migration_path)
     FileUtils.cp_r('spec/models', 'tmp')
     reset_models
-    FileUtils.cp_r(Dir.glob("spec/migrations#{ActiveRecord::VERSION::STRING < "3.1." ? "-pre-3.1" : ""}/#{options[:migration_glob]}"), HairTrigger.migration_path)
+    test_migratations = if ActiveRecord::VERSION::STRING < "3.1."
+      "spec/migrations-pre-3.1"
+    elsif ActiveRecord::VERSION::STRING < "5.0."
+      "spec/migrations-pre-5.0"
+    else
+      "spec/migrations"
+    end
+    FileUtils.cp_r(Dir.glob("#{test_migratations}/#{options[:migration_glob]}"), HairTrigger.migration_path)
   end
 
   def initialize_db
