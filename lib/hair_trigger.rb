@@ -219,9 +219,13 @@ end
 
 ActiveRecord::Base.send :extend, HairTrigger::Base
 if ActiveRecord::VERSION::STRING < "4.1."
-  ActiveRecord::Migrator.send :extend, HairTrigger::Migrator
+  ActiveRecord::Migrator.class_eval do
+    class << self
+      prepend HairTrigger::Migrator
+    end
+  end
 else
-  ActiveRecord::Migration.send :include, HairTrigger::Migrator
+  ActiveRecord::Migration.class_eval { prepend HairTrigger::Migrator }
 end
 ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval { include HairTrigger::Adapter }
-ActiveRecord::SchemaDumper.class_eval { include HairTrigger::SchemaDumper }
+ActiveRecord::SchemaDumper.class_eval { prepend HairTrigger::SchemaDumper }

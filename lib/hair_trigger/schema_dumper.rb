@@ -1,11 +1,11 @@
 module HairTrigger
   module SchemaDumper
 
-    def trailer_with_triggers(stream)
+    def trailer(stream)
       orig_show_warnings = Builder.show_warnings
       Builder.show_warnings = false # we already show them when running the migration
       triggers(stream)
-      trailer_without_triggers(stream)
+      super(stream)
     ensure
       Builder.show_warnings = orig_show_warnings
     end
@@ -95,9 +95,8 @@ module HairTrigger
       end
     end
 
-    def self.included(base)
+    def self.prepended(base)
       base.class_eval do
-        alias_method_chain :trailer, :triggers
         class << self
           attr_accessor :previous_schema
         end
