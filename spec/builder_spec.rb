@@ -210,7 +210,7 @@ describe "builder" do
 
   context "postgresql" do
     before(:each) do
-      @adapter = MockAdapter.new("postgresql", :postgresql_version => 94000)
+      @adapter = MockAdapter.new("postgresql", :postgresql_version => 90400)
     end
 
     it "should create multiple triggers for a group" do
